@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SeriesFormRequest;
 use App\Models\Series;
 use Illuminate\Http\Request;
 
@@ -22,7 +23,7 @@ class SeriesController extends Controller
         return view('series.create');
     }
 
-    public function store(Request $request)
+    public function store(SeriesFormRequest $request)
     {
         $series = Series::create($request->all());
 
@@ -43,7 +44,7 @@ class SeriesController extends Controller
         return view('series.edit')->with('series', $series);
     }
 
-    public function update(Series $series, Request $request)
+    public function update(Series $series, SeriesFormRequest $request)
     {
         $series->name = $request->name;
         $series->save();

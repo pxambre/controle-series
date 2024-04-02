@@ -2,5 +2,6 @@
     <x-series.form 
     :action="route('series.update', $series)"
     :name="$series->name"
+    :update="true"
     />
 </x-layout>
