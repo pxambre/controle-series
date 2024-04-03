@@ -16,7 +16,7 @@ class SeriesController extends Controller
     public function index(Request $request)
     {
         $series = Series::all();
-        $successMessage = $request->session()->get("message.success");
+        $successMessage = session()->get("success.message");
 
         return view('series.index')
             ->with('series', $series)
@@ -33,7 +33,7 @@ class SeriesController extends Controller
         $series = $this->seriesRepository->add($request);
         
         return to_route('series.index')
-            ->with('message.success',"Series '{$series->name}' added succesfully!");
+            ->with('success.message',"Series '{$series->name}' added succesfully!");
     }
 
     public function destroy(Series $series)
@@ -41,7 +41,7 @@ class SeriesController extends Controller
         $series->delete();
         
         return to_route('series.index')
-            ->with('message.success',"Series '{$series->name}' removed succesfully!");
+            ->with('success.message',"Series '{$series->name}' removed succesfully!");
     }
 
     public function edit(Series $series)
@@ -51,10 +51,10 @@ class SeriesController extends Controller
 
     public function update(Series $series, SeriesFormRequest $request)
     {
-        $series->name = $request->name;
+        $series->fill($request->all());
         $series->save();
 
         return to_route('series.index')
-            ->with('message.success',"Series edited succesfully!");;
+            ->with('success.message',"Series edited succesfully!");;
     }
 }
