@@ -2,15 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SeriesFormRequest;
 use App\Models\Series;
+use App\Repositories\SeriesRepository;
 use Illuminate\Http\Request;
 
 class SeriesController extends Controller
 {
+    public function __construct(private SeriesRepository $seriesRepository)
+    {
+    }
+
     public function index(Request $request)
     {
-        $series = Series::query()->orderBy("name")->get();
-        $successMessage = $request->session()->get("message.success");
+        $series = Series::all();
+        $successMessage = session()->get("success.message");
 
         return view('series.index')
             ->with('series', $series)
@@ -22,12 +28,12 @@ class SeriesController extends Controller
         return view('series.create');
     }
 
-    public function store(Request $request)
+    public function store(SeriesFormRequest $request)
     {
-        $series = Series::create($request->all());
-
+        $series = $this->seriesRepository->add($request);
+        
         return to_route('series.index')
-            ->with('message.success',"Series '{$series->name}' added succesfully!");
+            ->with('success.message',"Series '{$series->name}' added succesfully!");
     }
 
     public function destroy(Series $series)
@@ -35,7 +41,7 @@ class SeriesController extends Controller
         $series->delete();
         
         return to_route('series.index')
-            ->with('message.success',"Series '{$series->name}' removed succesfully!");
+            ->with('success.message',"Series '{$series->name}' removed succesfully!");
     }
 
     public function edit(Series $series)
@@ -43,12 +49,12 @@ class SeriesController extends Controller
         return view('series.edit')->with('series', $series);
     }
 
-    public function update(Series $series, Request $request)
+    public function update(Series $series, SeriesFormRequest $request)
     {
-        $series->name = $request->name;
+        $series->fill($request->all());
         $series->save();
 
         return to_route('series.index')
-            ->with('message.success',"Series edited succesfully!");;
+            ->with('success.message',"Series edited succesfully!");;
     }
 }
