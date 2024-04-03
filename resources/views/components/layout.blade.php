@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <title>{{ $title }}</title>
 </head>
 
@@ -13,7 +14,10 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ route('series.index') }}">Home</a>
             @auth
-                <a href="{{ route('logout') }}" class="btn btn-danger">Logout</a>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button class="btn btn-danger">Logout</button>
+            </form>
             @endauth
 
             @guest
