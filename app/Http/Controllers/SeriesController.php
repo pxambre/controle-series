@@ -11,6 +11,7 @@ class SeriesController extends Controller
 {
     public function __construct(private SeriesRepository $seriesRepository)
     {
+        $this->middleware("authenticator")->except('index');
     }
 
     public function index(Request $request)

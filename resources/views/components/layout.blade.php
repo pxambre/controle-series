@@ -9,26 +9,39 @@
 </head>
 
 <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ route('series.index') }}">Home</a>
+            @auth
+                <a href="{{ route('logout') }}" class="btn btn-danger">Logout</a>
+            @endauth
+
+            @guest
+            <a href="{{ route('login') }}" class="btn btn-primary">Sign In</a>                
+            @endguest
+        </div>
+    </nav>
+
     <div class="container">
         <h1>{{ $title }}</h1>
 
         @isset($successMessage)
-        <div class="alert alert-success">
-            {{ $successMessage }}
-        </div>
+            <div class="alert alert-success">
+                {{ $successMessage }}
+            </div>
         @endisset
 
         @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
         @endif
-        
-        {{ $slot }}    
+
+        {{ $slot }}
     </div>
 </body>
 
