@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SeriesFormRequest;
+use App\Mail\SeriesCreated;
 use App\Models\Series;
+use App\Models\User;
 use App\Repositories\SeriesRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class SeriesController extends Controller
 {
@@ -32,7 +35,21 @@ class SeriesController extends Controller
     public function store(SeriesFormRequest $request)
     {
         $series = $this->seriesRepository->add($request);
-        
+
+        $userList = User::all();
+        foreach ($userList as $index => $user) {
+            $email = new SeriesCreated(
+                $series->id,
+                $series->name,
+                $request->seasonsQty,
+                $request->episodesPerSeason,
+            );
+
+            $when = now()->addSeconds($index * 5);
+            Mail::to($user)->later($when, $email);
+        }
+
+    
         return to_route('series.index')
             ->with('success.message',"Series '{$series->name}' added succesfully!");
     }
