@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\SeriesCreated as SeriesCreatedEvent;
 use App\Http\Requests\SeriesFormRequest;
+use App\Jobs\DeleteSeriesCover;
 use App\Mail\SeriesCreated;
 use App\Models\Series;
 use App\Models\User;
@@ -35,6 +36,8 @@ class SeriesController extends Controller
 
     public function store(SeriesFormRequest $request)
     {
+        $coverPath = $request->file('cover')->store('series_cover', 'public');
+        $request->coverPath = $coverPath;
         $series = $this->seriesRepository->add($request);
         SeriesCreatedEvent::dispatch(
             $series->id,
